@@ -1,0 +1,18 @@
+# Ігнорувати  файли
+DB/charges.csv
+DB/projectiles.csv
+DB/finish_shots.csv
+DB/shots.csv
+DB/signal_settings.csv
+dist/DB/charges.csv
+dist/DB/projectiles.csv
+dist/DB/finish_shots.csv
+dist/DB/shots.csv
+dist/DB/signal_settings.csv
+main.spec
+setup.py
+report.pdf
+# Ігнорувати папки
+DB/chat_history/
+dist/DB/chat_history/
+dist/Version/
