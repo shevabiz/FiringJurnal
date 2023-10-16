@@ -55,7 +55,7 @@ def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles
     c.drawString(2 * inch, 7.5 * inch, "Пострілів")
     c.drawString(6 * inch, 7.5 * inch, "Залишок БК")
     c.drawString(2 * inch, 5.7 * inch, "Настріл")
-    c.drawString(6 * inch, 5.0 * inch, "Витрата по дням")
+    c.drawString(6 * inch, 4.5 * inch, "Витрата по дням")
     c.setFont("FreeSans", 14)
 
     # Блок Пострілів
@@ -72,7 +72,7 @@ def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles
         c.drawString(7.5 * inch, (6.8 - 0.3 * index) * inch, f"{row['Name']} - {row['Quantity']}шт.")
 
     # Блок Витрата по дням
-    y_position = 4.6
+    y_position = 4.1
     for index, row in finish_shots_grouped.iterrows():
         c.drawString(6 * inch, y_position * inch, f"{row['Дата']} - {row['Витрата']} шт")
         y_position -= 0.3
