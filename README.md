@@ -8,7 +8,7 @@ by shevabiz@gmail.com
 Щоб налаштувати чат стрільби:
 
 Скачайте папку "Soft to Firing".
-Встановіть "jdk-17.0.8_windows-x64_bin".
+Встановіть "Java SE 17" з сайту https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
 Скопіюйте папку "signal-cli-0.12.2" на диск C:.
 Клацніть ПКМ на "Мій Комп'ютер" -> "Властивості" -> "Додаткові налаштування системи" (з правого боку вікна) -> "Змінити оточення" -> "Path" -> "Створити" і введіть шлях "C:\signal-cli-0.12.2\bin".
 Після цього:
