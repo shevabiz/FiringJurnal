@@ -7,6 +7,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 import csv
 from collections import defaultdict
 from datetime import datetime
+import os
 
 pdfmetrics.registerFont(TTFont('FreeSans', 'DB/Font/FreeSans/FreeSans.ttf'))
 pdfmetrics.registerFont(TTFont('FreeSans-Bold', 'DB/Font/FreeSans/FreeSansBold.ttf'))
@@ -47,8 +48,21 @@ def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles
     shots_combinations[['Снаряд', 'Заряд']] = shots_combinations['Key'].str.split('|', expand=True)
     shots_combinations = shots_combinations.drop(columns=['Key'])
 
-    # Створює PDF документ
+    # Зчитуємо дані з файлу shotsposition.csv
+    shots_position_data = ""
+    if os.path.exists("DB/shotsposition.csv"):
+        with open("DB/shotsposition.csv", "r") as sp_file:
+            reader = csv.reader(sp_file)
+            next(reader)
+            shots_position_data = " | ".join(next(reader, []))
+
     c = canvas.Canvas(output_pdf_path, pagesize=landscape(letter))
+
+    # Вставляє дані з shotsposition.csv як заголовок
+    if shots_position_data:
+        c.setFont("FreeSans-Bold", 20)
+        c.drawString(1 * inch, 8 * inch, shots_position_data)
+        c.setFont("FreeSans", 14)
 
     # Створює Label для заголовків блоків в документі
     c.setFont("FreeSans-Bold", 16)
@@ -97,4 +111,3 @@ if __name__ == "__main__":
     output_pdf_path = "report.pdf"
     integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles_csv_path, shots_csv_path,
                                    output_pdf_path)
-

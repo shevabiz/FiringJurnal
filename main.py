@@ -5,7 +5,7 @@ import tkinter as tk
 from storage import show_storage_window
 import os
 import csv
-from shots_manager import shots_file_path
+from shots_manager import shots_file_path, is_shots_file_empty, save_position_data
 from datetime import datetime
 from finish_shots_handler import save_finish_shot
 from archive_shots import show_archive_shots
@@ -420,10 +420,50 @@ btn_settings = ctk.CTkButton(root, text="Настріл", command=display_shot_s
                              text_color="white")
 btn_settings.place(relx=0.7, rely=0.85, anchor="center")
 update_timer()
+
+
+# Функція для показу вікна введення даних про вогневу позицію, якщо shots.csv порожній
+def show_input_window():
+    def save_and_close():
+        firing_position = firing_position_entry.get()
+        gun_commander = gun_commander_entry.get()
+        save_position_data(firing_position, gun_commander)
+        input_window.destroy()
+
+    input_window = ctk.CTkToplevel(root)
+    input_window.geometry("300x250")
+    input_window.title("Ведіть дані")
+    input_window.resizable(False, False)
+
+    tk.Label(input_window, text="Вогнева позиція:", background="#242424",
+             font=("Arial", 12, "bold",),
+             fg="grey").pack(pady=5)
+    firing_position_entry = tk.Entry(input_window, font=("Arial", 12))
+    firing_position_entry.pack(pady=10)
+
+    tk.Label(input_window, text="Командир гармати:",
+             background="#242424",
+             font=("Arial", 12, "bold"),
+             fg="grey").pack(pady=5)
+    gun_commander_entry = tk.Entry(input_window, font=("Arial", 12))
+    gun_commander_entry.pack(pady=10)
+
+    ctk.CTkButton(input_window, text="Записати", command=save_and_close, font=("Arial", 14)).pack(pady=20)
+
+    input_window.grab_set()
+    input_window.wait_window()
+
+
+# Перерка чи файл shots.csv містить данні
+if is_shots_file_empty():
+    show_input_window()
+
 # Загружає дані налаштувань Signal
 load_settings()
 
 root.mainloop()
 
-# v.1.4  - додав чат стрільби який передає дані з полів Приціл Кутомір Снаряд Заряд Час в поле вводу в чаті
-#           відправляє за допомогою Signal-cli повідомлення а також отримує повідовлення від користувача
+# v.1.4 - При вході в програму якщо файл shots.csv не має даних - появляється вікно з полями вводу Вогнева позиція,
+#         Командир гармати і кнопка Записати
+#         дані запсуються в файл DB/shotsposition.csv
+#         Відобразив дані з файлу shotsposition.csv  як заголовок звіту

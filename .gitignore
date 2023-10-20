@@ -4,6 +4,7 @@ DB/projectiles.csv
 DB/finish_shots.csv
 DB/shots.csv
 DB/signal_settings.csv
+DB/shotsposition.csv
 dist/DB/charges.csv
 dist/DB/projectiles.csv
 dist/DB/finish_shots.csv

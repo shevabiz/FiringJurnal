@@ -23,3 +23,20 @@ def save_shot_data(pricil, kutomir, snaryad, zaryad, time_value):
     with open(shots_file_path, "a", newline='') as file:
         writer = csv.writer(file)
         writer.writerow([date_str, time_str, pricil, kutomir, snaryad, zaryad, time_value])
+
+
+# Функція для перевірки наявності даних у shots.csv
+def is_shots_file_empty():
+    with open(shots_file_path, "r") as file:
+        reader = csv.reader(file)
+        next(reader)
+        return not bool(list(reader))
+
+
+# Функція для збереження даних про позицію в shotsposition.csv
+def save_position_data(firing_position, gun_commander):
+    position_file_path = "DB/shotsposition.csv"
+    with open(position_file_path, "w", newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["Вогнева позиція", "Командир гармати"])
+        writer.writerow([firing_position, gun_commander])

@@ -9,9 +9,9 @@ shots_file_path = "DB/shots.csv"
 def show_individual_shots_archive():
     archive_window = tk.Toplevel()
     archive_window.title("Архів Пострілів")
-    archive_window.geometry('500x800')
+    archive_window.geometry('530x800')
     archive_window.configure(bg='black')
-    archive_window.resizable(False, False)
+    # archive_window.resizable(False, False)
 
     # Перевірка, чи існує файл
     if not Path(shots_file_path).exists():
