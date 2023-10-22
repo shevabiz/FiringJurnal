@@ -13,6 +13,14 @@ pdfmetrics.registerFont(TTFont('FreeSans', 'DB/Font/FreeSans/FreeSans.ttf'))
 pdfmetrics.registerFont(TTFont('FreeSans-Bold', 'DB/Font/FreeSans/FreeSansBold.ttf'))
 
 
+def check_new_page(y_position, c):
+    """Перевірка чи потрібна нова сторінка."""
+    if y_position < 1 * inch:
+        c.showPage()
+        y_position = 8 * inch
+    return y_position
+
+
 def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles_csv_path, shots_csv_path,
                                    output_pdf_path):
     # Зчитує дані з файлів
@@ -20,6 +28,8 @@ def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles
     projectiles_data = pd.read_csv(projectiles_csv_path)
     data = pd.read_csv(input_csv_path)
     shots_data = pd.read_csv(shots_csv_path)
+
+    y_position = 8 * inch
 
     # Групує за датою і пострілами
     with open(shots_csv_path, "r") as file:
@@ -81,9 +91,9 @@ def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles
     for index, row in charges_data.iterrows():
         c.drawString(6 * inch, (6.8 - 0.3 * index) * inch, f"{row['Name']} - {row['Quantity']}шт.")
 
-    c.drawString(7.5 * inch, 7.1 * inch, "Снаряди:")
+    c.drawString(8 * inch, 7.1 * inch, "Снаряди:")
     for index, row in projectiles_data.iterrows():
-        c.drawString(7.5 * inch, (6.8 - 0.3 * index) * inch, f"{row['Name']} - {row['Quantity']}шт.")
+        c.drawString(8 * inch, (6.8 - 0.3 * index) * inch, f"{row['Name']} - {row['Quantity']}шт.")
 
     # Блок Витрата по дням
     y_position = 4.1
@@ -98,6 +108,9 @@ def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles
     for index, row in shots_combinations.iterrows():
         c.drawString(2 * inch, y_position * inch, f"{row['Снаряд']} | {row['Заряд']} - {row['Витрата']} шт.")
         y_position -= 0.3
+
+    y_position = check_new_page(y_position, c)
+    y_position -= 0.3 * inch
 
     # Зберігає PDF
     c.save()

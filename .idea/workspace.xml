@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="92cdf776-cb1a-49e8-b46d-4f72835d0387" name="Changes" comment="Added the program file and Signal-CLI.">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Firing.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Firing.iml" afterDir="false" />
+    <list default="true" id="92cdf776-cb1a-49e8-b46d-4f72835d0387" name="Changes" comment="update file shots_manager, main, report, active_individual_shots, new version FiringJurnal.exe">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/archive_individual_shots.py" beforeDir="false" afterPath="$PROJECT_DIR$/archive_individual_shots.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/FiringJurnal1_4.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dist/FiringJurnal1_4.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/report.py" beforeDir="false" afterPath="$PROJECT_DIR$/report.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shots_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/shots_manager.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -162,7 +157,15 @@
       <option name="project" value="LOCAL" />
       <updated>1697459308236</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="update file shots_manager, main, report, active_individual_shots, new version FiringJurnal.exe">
+      <option name="closed" value="true" />
+      <created>1697784758222</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1697784758222</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -196,6 +199,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Firing v.1.4" />
     <MESSAGE value="Added the program file and Signal-CLI." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added the program file and Signal-CLI." />
+    <MESSAGE value="update file shots_manager, main, report, active_individual_shots, new version FiringJurnal.exe" />
+    <option name="LAST_COMMIT_MESSAGE" value="update file shots_manager, main, report, active_individual_shots, new version FiringJurnal.exe" />
   </component>
 </project>
