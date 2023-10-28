@@ -10,10 +10,19 @@ dist/DB/projectiles.csv
 dist/DB/finish_shots.csv
 dist/DB/shots.csv
 dist/DB/signal_settings.csv
+.idea/workspace.xml
 main.spec
 setup.py
 report.pdf
+error.log
+browser.py
 # Ігнорувати папки
 DB/chat_history/
 dist/DB/chat_history/
 dist/Version/
+blob_storage/
+VideoDecodeStats/
+webrtc_event_logs/
+build/
+.idea/
+
