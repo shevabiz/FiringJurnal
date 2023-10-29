@@ -118,6 +118,33 @@ def show_storage_window():
     def add_new_charge():
         add_item_to_file(charge_file_path, charge_choices)
 
+    def reset_quantities(file_path):
+        """
+        Обнулити залишки у вказаному файлі CSV.
+        """
+        if os.path.exists(file_path):
+            data_dict = {}
+            with open(file_path, 'r') as csv_file:
+                reader = csv.reader(csv_file)
+                next(reader)
+                for row in reader:
+                    if len(row) > 1:
+                        data_dict[row[0]] = 0
+
+            with open(file_path, 'w', newline='') as csv_file:
+                csv_writer = csv.writer(csv_file)
+                csv_writer.writerow(["Name", "Quantity"])
+                for key, value in data_dict.items():
+                    csv_writer.writerow([key, value])
+
+    def reset_all_quantities():
+        """
+        Обнулити залишки для всіх пунктів у файлах CSV.
+        """
+        reset_quantities(projectile_file_path)
+        reset_quantities(charge_file_path)
+        refresh_tables()
+
     upper_frame = ctk.CTkFrame(root)
     upper_frame.pack(pady=20)
 
@@ -165,6 +192,9 @@ def show_storage_window():
     charge_table.column('Заряд', width=100, anchor='center')
     charge_table.column('Залишок', width=100, anchor='center')
     charge_table.pack(side='right', padx=20, pady=20)
+
+    reset_button = ctk.CTkButton(upper_frame, text="Обнулити залишки", command=reset_all_quantities)
+    reset_button.grid(row=2, column=4, padx=10, pady=10)
 
     refresh_tables()
 

@@ -11,6 +11,14 @@ dist/DB/finish_shots.csv
 dist/DB/shots.csv
 dist/DB/signal_settings.csv
 .idea/workspace.xml
+build/main/Analysis-00.toc
+build/main/EXE-00.toc
+build/main/PKG-00.toc
+build/main/PYZ-00.pyz
+build/main/PYZ-00.toc
+build/main/main.pkg
+build/main/warn-main.txt
+build/main/warn-
 main.spec
 setup.py
 report.pdf

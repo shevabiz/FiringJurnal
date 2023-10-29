@@ -138,7 +138,7 @@ class ChatShotsWindow:
 
             max_buttons_per_row = 3
 
-            quick_replies = ["Навестись ", "Стій, записати ", "Стій ", "Вогонь ", "В укриття ", "Маскуємо "]
+            quick_replies = ["Навестись! ", "Стій, записати! ", "Стій! ", "Вогонь! ", "В укриття! ", "Маскуємо! "]
 
             for idx, reply in enumerate(quick_replies):
                 row = idx // max_buttons_per_row

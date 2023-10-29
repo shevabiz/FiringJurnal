@@ -34,7 +34,7 @@ def show_archive_shots():
 
     rows = list(csv.reader(file_content[1:]))
     total_expenditure = sum(int(row[2]) for row in rows)
-    total_shots_label.config(text="Загальна витрати: " + str(total_expenditure),
+    total_shots_label.config(text="Загальна витрата: " + str(total_expenditure),
                              font=("Ubuntu", 14, "bold"), foreground="grey")
 
     headers = rows[0]

@@ -3,3 +3,7 @@ tkcalendar~=1.6.1
 pandas~=2.1.1
 Pillow~=10.0.1
 reportlab~=4.0.5
+cefpython3~=66.1
+PyQt5~=5.15.10
+tkinterweb~=3.21.1
+chardet~=5.2.0

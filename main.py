@@ -17,6 +17,7 @@ import webbrowser
 from shift import close_shift
 from chat_shots import chat_window_instance
 
+
 # Перевірка і створення папки
 if not os.path.exists("DB"):
     os.mkdir("DB")
@@ -261,6 +262,11 @@ def load_settings():
             recipient_number_var.set(recipient)
 
 
+# Посилання на Донат
+def open_donate_link():
+    webbrowser.open('https://send.monobank.ua/jar/AWPTFLk2cC')
+
+
 root = ctk.CTk()
 root.title("Журнал стрільб")
 root.geometry('500x700')
@@ -271,17 +277,25 @@ recipient_number_var = tk.StringVar()
 
 # Створення верхнього меню
 menu = tk.Menu(root)
-root.config(menu=menu, height=15)
+root.config(menu=menu)
 help_menu = tk.Menu(menu)
 restart_icon = tk.PhotoImage(file="DB/img/restart.png")
 restart_icon = restart_icon.subsample(28)
-menu.add_command(image=restart_icon, compound=tk.CENTER, command=restart_program)
+menu.add_command(image=restart_icon, command=restart_program)
 menu.add_cascade(label="Допомога", menu=help_menu, font=("Arial", 10))
 menu.add_command(label="Звіт", font=("Arial", 10), command=generate_and_open_report)
 help_menu.add_command(label="Налаштування", command=show_settings_window, font=("Arial", 10))
 help_menu.add_command(label="Закрити зміну", command=close_shift, font=("Arial", 10))
 help_menu.add_command(label="Про автора", command=about_author, font=("Arial", 10))
 
+donat_btn = ctk.CTkButton(root, text="Підтримати проєкт",
+                          command=open_donate_link,
+                          font=("Arial", 14, "bold"),
+                          fg_color="#242424",
+                          text_color="white",
+                          hover_color="#242424")
+
+donat_btn.place(relx=0.35, rely=0.95)
 # Кнопки в центрі
 btn1 = ctk.CTkButton(root, text="Архів стрільби", command=show_archive_shots)
 btn1.place(relx=0.3, rely=0.05, anchor="center")
@@ -419,6 +433,7 @@ btn_settings = ctk.CTkButton(root, text="Настріл", command=display_shot_s
                              font=("Arial", 14, "bold"),
                              text_color="white")
 btn_settings.place(relx=0.7, rely=0.85, anchor="center")
+
 update_timer()
 
 

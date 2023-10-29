@@ -8,6 +8,7 @@ import csv
 from collections import defaultdict
 from datetime import datetime
 import os
+import chardet
 
 pdfmetrics.registerFont(TTFont('FreeSans', 'DB/Font/FreeSans/FreeSans.ttf'))
 pdfmetrics.registerFont(TTFont('FreeSans-Bold', 'DB/Font/FreeSans/FreeSansBold.ttf'))
@@ -21,13 +22,26 @@ def check_new_page(y_position, c):
     return y_position
 
 
+def detect_encoding(file_path):
+    """Визначення кодування файлу."""
+    with open(file_path, 'rb') as file:
+        result = chardet.detect(file.read())
+    return result['encoding']
+
+
+def read_csv_with_detected_encoding(file_path):
+    """Зчитування CSV файлу з автоматичним визначенням кодування."""
+    encoding = detect_encoding(file_path)
+    return pd.read_csv(file_path, encoding=encoding)
+
+
 def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles_csv_path, shots_csv_path,
                                    output_pdf_path):
-    # Зчитує дані з файлів
-    charges_data = pd.read_csv(charges_csv_path)
-    projectiles_data = pd.read_csv(projectiles_csv_path)
-    data = pd.read_csv(input_csv_path)
-    shots_data = pd.read_csv(shots_csv_path)
+    # Зчитує дані з файлів з визначенням кодування
+    charges_data = read_csv_with_detected_encoding(charges_csv_path)
+    projectiles_data = read_csv_with_detected_encoding(projectiles_csv_path)
+    data = read_csv_with_detected_encoding(input_csv_path)
+    shots_data = read_csv_with_detected_encoding(shots_csv_path)
 
     y_position = 8 * inch
 
