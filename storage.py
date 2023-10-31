@@ -3,6 +3,7 @@ from tkinter import ttk
 import csv
 import os
 from tkinter.simpledialog import askstring
+from tkinter import messagebox
 
 # Шляхи до файлів
 projectile_file_path = "DB/projectiles.csv"
@@ -141,9 +142,11 @@ def show_storage_window():
         """
         Обнулити залишки для всіх пунктів у файлах CSV.
         """
-        reset_quantities(projectile_file_path)
-        reset_quantities(charge_file_path)
-        refresh_tables()
+        answer = messagebox.askyesno("Попередження", "Ви дійсно бажаєте обнулити залишки?")
+        if answer:
+            reset_quantities(projectile_file_path)
+            reset_quantities(charge_file_path)
+            refresh_tables()
 
     upper_frame = ctk.CTkFrame(root)
     upper_frame.pack(pady=20)
