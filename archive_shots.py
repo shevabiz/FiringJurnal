@@ -32,19 +32,19 @@ def show_archive_shots():
             total_shots = len(file_content) - 1
             total_shots_label.config(text="Загальна кількість пострілів: " + str(total_shots))
 
-    rows = list(csv.reader(file_content[1:]))
-    total_expenditure = sum(int(row[2]) for row in rows)
-    total_shots_label.config(text="Загальна витрата: " + str(total_expenditure),
-                             font=("Ubuntu", 14, "bold"), foreground="grey")
+        rows = list(csv.reader(file_content))
+        headers = rows[0]
+        data_rows = rows[1:]
 
-    headers = rows[0]
+        total_expenditure = sum(int(row[2]) for row in data_rows)
+        total_shots_label.config(text="Загальна витрата: " + str(total_expenditure),
+                                 font=("Ubuntu", 14, "bold"), foreground="grey")
 
-    for _ in headers:
         last_date = None
         total_shots_for_day = 0
         shot_number_for_day = 1  # Для номерації пострілів кожного дня
 
-        for row in rows[1:]:
+        for row in data_rows:
             current_date = row[0].replace("-", ".")
 
             # Перевірка на зміну дати
