@@ -95,6 +95,9 @@ def show_storage_window():
         refresh_tables()
 
     def refresh_tables():
+        total_projectiles = 0
+        total_charges = 0
+
         for table in [projectile_table, charge_table]:
             for row in table.get_children():
                 table.delete(row)
@@ -104,6 +107,7 @@ def show_storage_window():
                 reader = csv.reader(csv_file)
                 next(reader)
                 for row in reader:
+                    total_projectiles += int(row[1]) if len(row) > 1 else 0
                     projectile_table.insert("", "end", values=row)
 
         if os.path.exists(charge_file_path):
@@ -111,7 +115,11 @@ def show_storage_window():
                 reader = csv.reader(csv_file)
                 next(reader)
                 for row in reader:
+                    total_charges += int(row[1]) if len(row) > 1 else 0
                     charge_table.insert("", "end", values=row)
+
+        projectile_label.configure(text=f"Снаряди: {total_projectiles} шт.")
+        charge_label.configure(text=f"Заряди: {total_charges} шт.")
 
     def add_new_projectile():
         add_item_to_file(projectile_file_path, projectile_choices)
@@ -188,6 +196,10 @@ def show_storage_window():
     projectile_table.column('Снаряд', width=100, anchor='center')
     projectile_table.column('Залишок', width=100, anchor='center')
     projectile_table.pack(side='left', padx=20, pady=20)
+    projectile_label = ctk.CTkLabel(upper_frame, text="Снаряди:",
+                                    font=("Arial", 14, "bold"),
+                                    text_color="grey")
+    projectile_label.grid(row=5, column=0, padx=10)
 
     charge_table = ttk.Treeview(root, columns=('Заряд', 'Залишок'), show="headings")
     charge_table.heading('Заряд', text='Заряд')
@@ -195,6 +207,10 @@ def show_storage_window():
     charge_table.column('Заряд', width=100, anchor='center')
     charge_table.column('Залишок', width=100, anchor='center')
     charge_table.pack(side='right', padx=20, pady=20)
+    charge_label = ctk.CTkLabel(upper_frame, text="Заряди:",
+                                font=("Arial", 14, "bold"),
+                                text_color="grey")
+    charge_label.grid(row=5, column=2, padx=10)
 
     reset_button = ctk.CTkButton(upper_frame, text="Обнулити залишки", command=reset_all_quantities)
     reset_button.grid(row=2, column=4, padx=10, pady=10)
