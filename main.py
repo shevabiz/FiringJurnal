@@ -16,6 +16,7 @@ from report import integrated_generate_pdf_report
 import webbrowser
 from shift import close_shift
 from chat_shots import chat_window_instance
+from tkinter import messagebox
 
 
 # Перевірка і створення папки
@@ -108,6 +109,17 @@ timer_id = "0"
 
 def shoot():
     global shot_count
+    # Перевіряємо обов'язкові поля на заповнення
+    pricil = entry1.get()
+    kutomir = entry2.get()
+    projectile = projectile_combobox.get()
+    charge = charge_combobox.get()
+
+    if not pricil or not kutomir or not projectile or not charge:
+        messagebox.showwarning("Помилка",
+                               "Поля 'Приціл', 'Кутомір', 'Заряд', та 'Снаряд' повинні бути заповнені.")
+        return
+
     current_time = datetime.now().strftime("%d.%m.%y | %H:%M:%S")
     pricil = entry1.get()
     kutomir = entry2.get()
