@@ -18,7 +18,6 @@ from shift import close_shift
 from chat_shots import chat_window_instance
 from tkinter import messagebox
 
-
 # Перевірка і створення папки
 if not os.path.exists("DB"):
     os.mkdir("DB")
@@ -73,7 +72,7 @@ def generate_and_open_report():
     webbrowser.open('file://' + os.path.realpath(output_pdf_path))
 
     # Відправляє повідомлення в Signal
-    send_signal_message(recipient_number_var.get(), 'Звіт по стрільбі', output_pdf_path)
+    send_signal_message(report_recipient_number_var.get(), 'Звіт по стрільбі', output_pdf_path)
 
 
 def restart_program():
@@ -220,17 +219,18 @@ def finish_and_save():
 
 
 def show_settings_window():
-    global settings_window, sender_number_var, recipient_number_var
+    global settings_window, sender_number_var, recipient_number_var, report_recipient_number_var
     if settings_window:
         settings_window.destroy()
 
     settings_window = tk.Toplevel(root)
     settings_window.title("Налаштування Signal-CLI")
-    settings_window.geometry("250x300")
+    settings_window.geometry("250x350")
     settings_window.configure(bg='black')
 
     label_sender = ctk.CTkLabel(settings_window, text="Номер для Signal-CLI:", font=("Arial", 14, "bold"),
                                 text_color="grey")
+
     label_sender.pack(pady=10)
 
     entry_sender = ttk.Entry(settings_window, textvariable=sender_number_var, font=("Arial", 12, "bold"))
@@ -239,9 +239,16 @@ def show_settings_window():
     label_recipient = ctk.CTkLabel(settings_window, text="Номер отримувача:", font=("Arial", 14, "bold"),
                                    text_color="grey")
     label_recipient.pack(pady=10)
-
     entry_recipient = ttk.Entry(settings_window, textvariable=recipient_number_var, font=("Arial", 12, "bold"))
     entry_recipient.pack(pady=5)
+
+    label_report_recipient = ctk.CTkLabel(settings_window, text="Номер для звіту:", font=("Arial", 14, "bold"),
+                                          text_color="grey")
+    label_report_recipient.pack(pady=10)
+
+    entry_report_recipient = ttk.Entry(settings_window, textvariable=report_recipient_number_var,
+                                       font=("Arial", 12, "bold"))
+    entry_report_recipient.pack(pady=5)
 
     save_button = ctk.CTkButton(settings_window, text="Зберегти", font=("Arial", 12), text_color="white",
                                 command=save_settings)
@@ -249,29 +256,34 @@ def show_settings_window():
 
 
 def save_settings():
-    global sender_number_var, recipient_number_var
+    global sender_number_var, recipient_number_var, report_recipient_number_var
     sender_number = sender_number_var.get()
     recipient_number = recipient_number_var.get()
+    report_recipient_number = report_recipient_number_var.get()
 
     # Зберігає дані про отримувача і відправника введених в Налаштуваннях
     with open(settings_file_path, "w", newline='') as csv_file:
         writer_setting = csv.writer(csv_file)
-        writer_setting.writerow(["Sender", "Recipient"])
-        writer_setting.writerow([sender_number, recipient_number])
+        writer_setting.writerow(["Sender", "Recipient", "ReportRecipient"])
+        writer_setting.writerow([sender_number, recipient_number, report_recipient_number])
 
     if settings_window:
         settings_window.destroy()
 
 
 def load_settings():
-    global sender_number_var, recipient_number_var
+    global sender_number_var, recipient_number_var, report_recipient_number_var
     if os.path.exists(settings_file_path):
         with open(settings_file_path, "r") as csv_file:
             reader = csv.reader(csv_file)
-            next(reader)
-            sender, recipient = next(reader)
-            sender_number_var.set(sender)
-            recipient_number_var.set(recipient)
+            next(reader)  # Пропускаємо заголовок
+            for row in reader:
+                sender_number_var.set(row[0])
+                recipient_number_var.set(row[1])
+                if len(row) > 2:
+                    report_recipient_number_var.set(row[2])
+                else:
+                    report_recipient_number_var.set("")
 
 
 # Посилання на Донат
@@ -284,8 +296,9 @@ root.title("Журнал стрільб")
 root.geometry('500x700')
 root.resizable(False, False)
 
-sender_number_var = tk.StringVar()
-recipient_number_var = tk.StringVar()
+sender_number_var = tk.StringVar(root)
+recipient_number_var = tk.StringVar(root)
+report_recipient_number_var = tk.StringVar(root)
 
 # Створення верхнього меню
 menu = tk.Menu(root)
