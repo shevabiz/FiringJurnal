@@ -11,6 +11,10 @@ dist/DB/finish_shots.csv
 dist/DB/shots.csv
 dist/DB/signal_settings.csv
 DB/data_storage.db
+DB/menu_data.csv
+DB/data.csv
+dist/DB/data.csv
+dist/DB/menu_data.csv
 .idea/workspace.xml
 build/main/Analysis-00.toc
 build/main/EXE-00.toc

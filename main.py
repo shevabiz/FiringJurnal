@@ -17,6 +17,7 @@ import webbrowser
 from shift import close_shift
 from chat_shots import chat_window_instance
 from tkinter import messagebox
+from send_target import send_target_windows
 
 # Перевірка і створення папки
 if not os.path.exists("DB"):
@@ -145,6 +146,30 @@ def shoot():
 
     if charge:
         reduce_inventory(charge_file_path, charge)
+
+
+def confirm_shoot():
+    confirm_window = ctk.CTkToplevel(root)
+    confirm_window.title("Підтвердження")
+
+    ctk.CTkLabel(confirm_window, text="Відправити дані?", font=("Arial", 16)).pack(pady=20)
+
+    def on_yes():
+        confirm_window.destroy()
+        combined_function()
+        send_target_windows()
+
+    def on_no():
+        combined_function()
+        confirm_window.destroy()
+
+    yes_button = ctk.CTkButton(confirm_window, text="Так", command=on_yes)
+    yes_button.pack(side='left', padx=20, pady=20)
+
+    no_button = ctk.CTkButton(confirm_window, text="Ні", command=on_no)
+    no_button.pack(side='right', padx=20, pady=20)
+
+    confirm_window.grab_set()
 
 
 def update_journal():
@@ -276,7 +301,7 @@ def load_settings():
     if os.path.exists(settings_file_path):
         with open(settings_file_path, "r") as csv_file:
             reader = csv.reader(csv_file)
-            next(reader)  # Пропускаємо заголовок
+            next(reader)
             for row in reader:
                 sender_number_var.set(row[0])
                 recipient_number_var.set(row[1])
@@ -415,7 +440,7 @@ time_entry.place(relx=0.9, rely=0.25, anchor="center")
 
 # Кнопки
 save_btn = ctk.CTkButton(root, text="Стій, записати", font=("Arial", 14, "bold"), text_color="white", fg_color="green")
-save_btn.configure(command=combined_function)
+save_btn.configure(command=confirm_shoot)
 save_btn.place(relx=0.2, rely=0.35, anchor="center")
 
 
