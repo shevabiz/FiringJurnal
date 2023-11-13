@@ -1,28 +1,24 @@
 import os
 import csv
 import tkinter as tk
-
+from customtkinter import CTkToplevel
 from finish_shots_handler import finish_shots_file_path
 
 
 def show_archive_shots():
     # Створення дочірнього вікна
-    child = tk.Toplevel()
+    child = CTkToplevel()
     child.title("Архів стрільби")
-    child.geometry('400x800')
-    child.configure(bg='black')
+    child.geometry('400x750')
+    child.attributes('-topmost', True)
     child.resizable(False, False)
 
-    # Створення Label для заголовків
-    headers_frame = tk.Frame(child, bg='black')
-    headers_frame.pack(fill=tk.X, padx=20, pady=(20, 0))
-
     # Створення Text widget для відображення даних
-    text_widget = tk.Text(child, font=("Ubuntu", 12), bg="black", fg="green", borderwidth=0, wrap=tk.NONE, padx=10,
+    text_widget = tk.Text(child, font=("Ubuntu", 14), bg="#242424", fg="green", borderwidth=0, wrap=tk.NONE, padx=10,
                           pady=5, highlightthickness=0)
     text_widget.pack(pady=(10, 20), padx=20, fill=tk.BOTH, expand=True)
     # Створення Label для відображення підсумків
-    total_shots_label = tk.Label(child, font=("Ubuntu", 14), bg="black", fg="white")
+    total_shots_label = tk.Label(child, font=("Ubuntu", 14), bg="#242424", fg="white")
     total_shots_label.pack(pady=(10, 20), padx=20, side=tk.BOTTOM)
     text_widget.tag_configure("total", font=("Ubuntu", 14, "bold"), foreground="grey")
 
@@ -33,7 +29,6 @@ def show_archive_shots():
             total_shots_label.config(text="Загальна кількість пострілів: " + str(total_shots))
 
         rows = list(csv.reader(file_content))
-        headers = rows[0]
         data_rows = rows[1:]
 
         total_expenditure = sum(int(row[2]) for row in data_rows)
@@ -55,7 +50,7 @@ def show_archive_shots():
                 shot_number_for_day = 1
 
             # Додаємо відступи між стовбцями та вирівнюємо дані по центру
-            spaced_row = [f"{item:^20}" for item in row[1:]]
+            spaced_row = [f"{item:^10}" for item in row[1:]]
             data_line = f"{shot_number_for_day:02}. {row[0]:^20}  " + "  ".join(spaced_row) + "\n"
             text_widget.insert(tk.END, data_line)
             total_shots_for_day += int(row[2])
@@ -67,3 +62,4 @@ def show_archive_shots():
 
     if __name__ == "__main__":
         show_archive_shots()
+        

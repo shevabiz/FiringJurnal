@@ -128,7 +128,7 @@ def display_shot_stats():
 
     table.heading("#0", text="")
     table.heading("Дата", text="Дата", anchor=tk.CENTER)
-    table.heading("Снаряд|Заряд", text="Снаряд|Заряд", anchor=tk.CENTER)
+    table.heading("Снаряд|Заряд", text="Снаряд | Заряд", anchor=tk.CENTER)
     table.heading("Витрата", text="Витрата", anchor=tk.CENTER)
 
     # Зчитування даних з CSV файлу та групування їх

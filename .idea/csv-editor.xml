@@ -3,6 +3,20 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="\DB\charges.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\DB\data.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\DB\finish_shots.csv">
           <value>
             <Attribute>
@@ -10,7 +24,14 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\DB\shots.csv">
+        <entry key="\DB\menu_data.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\DB\projectiles.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 import subprocess
 import threading
+from customtkinter import CTk, CTkEntry, CTkButton
 
 lock = threading.Lock()
 
@@ -95,31 +96,33 @@ class ChatShotsWindow:
 
     def open_chat_shots_window(self, sight, anglemeter, charge, projectile, time_val):
         if not self.chat_window:
-            self.chat_window = tk.Tk()
+            self.chat_window = CTk()
             self.chat_window.title("Чат стрільби")
             self.chat_window.geometry("400x700")
-            self.chat_window.configure(background="black")
+            self.chat_window.configure(fg_color="#242424")
             self.chat_window.resizable(False, False)
             self.chat_text_area = scrolledtext.ScrolledText(self.chat_window, wrap=tk.WORD,
                                                             width=40,
-                                                            height=20,
+                                                            height=22,
                                                             bg="#242424",
                                                             fg="white",
                                                             font=("Arial", 12),
                                                             relief=tk.FLAT,
-                                                            highlightthickness=0,
+                                                            highlightthickness=1,
+                                                            highlightcolor="grey",
+                                                            highlightbackground="grey",
                                                             padx=10)
             self.chat_text_area.place(relx=0.5, rely=0.3, anchor="center")
-            self.chat_text_area.configure(state='disabled')
+            self.chat_text_area.configure(state='disabled', )
             self.chat_text_area.tag_configure('received', foreground='orange')
-
-            self.msg_entry = tk.Entry(self.chat_window,
-                                      width=40,
-                                      font=("Arial", 12),
-                                      bg="#242424",
-                                      fg="white",
-                                      relief=tk.FLAT,
-                                      highlightthickness=0,
+            self.msg_entry = CTkEntry(self.chat_window,
+                                      width=350,
+                                      height=50,
+                                      font=("Arial", 14),
+                                      fg_color="grey",
+                                      text_color="white",
+                                      border_width=1,
+                                      border_color="grey"
                                       )
 
             self.msg_entry.place(relx=0.5, rely=0.8, anchor="center")
@@ -128,13 +131,14 @@ class ChatShotsWindow:
                 message_str += f" (Час: {time_val})"
             self.msg_entry.insert(0, message_str)
 
-            send_btn = tk.Button(self.chat_window,
+            send_btn = CTkButton(self.chat_window,
                                  text="Відправити",
                                  command=self.send_message,
-                                 bg="blue",
-                                 fg="white",
-                                 font=("Arial", 12, "bold"))
+                                 width=150,
+                                 font=("Arial", 14, "bold"),
+                                 hover_color="green")
             send_btn.place(relx=0.5, rely=0.9, anchor="center")
+            self.chat_window.bind("<Return>", lambda event: self.send_message())
 
             max_buttons_per_row = 3
 
@@ -144,7 +148,10 @@ class ChatShotsWindow:
                 row = idx // max_buttons_per_row
                 col = idx % max_buttons_per_row
 
-                btn = tk.Button(self.chat_window, text=reply, fg="white", bg="green", width=12,
+                btn = CTkButton(self.chat_window, text=reply,
+                                text_color="white",
+                                fg_color="green",
+                                width=100,
                                 command=lambda r=reply: self.msg_entry.insert(0, r))
 
                 btn.place(relx=(0.20 + col * 0.30), rely=0.65 + row * 0.07, anchor="center")

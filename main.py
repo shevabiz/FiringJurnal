@@ -1,7 +1,7 @@
 import sys
 import customtkinter as ctk
-from tkinter import ttk
 import tkinter as tk
+from customtkinter import CTkTextbox, CTkLabel, CTkEntry, CTkToplevel
 from storage import show_storage_window
 import os
 import csv
@@ -38,6 +38,23 @@ for path in [projectile_file_path, charge_file_path]:
 settings_file_path = "DB/signal_settings.csv"
 
 settings_window = None
+
+
+def child_windows_position(parent, child_width, child_height):
+    # Отримання розмірів та положення батьківського вікна
+    x_parent = parent.winfo_x()
+    y_parent = parent.winfo_y()
+    parent_width = parent.winfo_width()
+    parent_height = parent.winfo_height()
+
+    # Розрахунок положення дочірнього вікна
+    x_child = x_parent + (parent_width - child_width) // 2
+    y_child = y_parent + (parent_height - child_height) // 2
+
+    # Створення та розміщення дочірнього вікна
+    child = ctk.CTkToplevel(parent)
+    child.geometry(f'{child_width}x{child_height}+{x_child}+{y_child}')
+    return child
 
 
 def send_signal_message(phone_number, message, attachment=None):
@@ -91,16 +108,17 @@ def load_items_from_file(file_path):
 
 
 def about_author():
-    about_window = ctk.CTkToplevel(root)
+    about_window = child_windows_position(root, 250, 150)
     about_window.title("Про програму")
+    about_window.attributes('-topmost', True)
 
-    ctk.CTkLabel(about_window, text="Автор: Шевцов Василь", font=("Arial", 16)).pack(pady=10,
-                                                                                     padx=10)
+    ctk.CTkLabel(about_window, text="Автор: Шевцов Василь", font=("Arial", 16, "bold"), text_color="grey").pack(pady=10,
+                                                                                                                padx=10)
     ctk.CTkLabel(about_window, text="Е-Mail: "
-                                    "shevabiz@gmail.com", font=("Arial", 16)).pack(pady=10,
-                                                                                   padx=10)
-    ctk.CTkLabel(about_window, text="Версія 1.4", font=("Arial", 16)).pack(pady=10,
-                                                                           padx=10)
+                                    "shevabiz@gmail.com", font=("Arial", 16, "bold"), text_color="grey").pack(pady=10,
+                                                                                                              padx=10)
+    ctk.CTkLabel(about_window, text="Версія 1.4", font=("Arial", 16, "bold"), text_color="grey").pack(pady=10,
+                                                                                                      padx=10)
 
 
 shot_count = 0
@@ -149,9 +167,8 @@ def shoot():
 
 
 def confirm_shoot():
-    confirm_window = ctk.CTkToplevel(root)
+    confirm_window = child_windows_position(root, 400, 200)
     confirm_window.title("Підтвердження")
-
     ctk.CTkLabel(confirm_window, text="Відправити дані?", font=("Arial", 16)).pack(pady=20)
 
     def on_yes():
@@ -206,7 +223,7 @@ def update_timer():
         return
     current_timer = timer_label.cget("text")
     if current_timer == "Хвилини:Секунди":
-        timer_label.config(text="00:00")
+        timer_label.configure(text="00:00")
         root.after(1000, update_timer)
         return
 
@@ -215,7 +232,7 @@ def update_timer():
     if seconds == 60:
         seconds = 0
         minutes += 1
-    timer_label.config(text=f"{minutes:02}:{seconds:02}")
+    timer_label.configure(text=f"{minutes:02}:{seconds:02}")
     root.after(1000, update_timer)
 
 
@@ -240,7 +257,7 @@ def finish_and_save():
     # Обнулює таймер
     if timer_id:
         root.after_cancel(timer_id)
-    timer_label.config(text="00:00")
+    timer_label.configure(text="00:00")
 
 
 def show_settings_window():
@@ -248,34 +265,42 @@ def show_settings_window():
     if settings_window:
         settings_window.destroy()
 
-    settings_window = tk.Toplevel(root)
+    settings_window = child_windows_position(root, 250, 350)
     settings_window.title("Налаштування Signal-CLI")
-    settings_window.geometry("250x350")
-    settings_window.configure(bg='black')
+    settings_window.attributes('-topmost', True)
 
     label_sender = ctk.CTkLabel(settings_window, text="Номер для Signal-CLI:", font=("Arial", 14, "bold"),
                                 text_color="grey")
 
     label_sender.pack(pady=10)
 
-    entry_sender = ttk.Entry(settings_window, textvariable=sender_number_var, font=("Arial", 12, "bold"))
+    entry_sender = CTkEntry(settings_window, textvariable=sender_number_var,
+                            font=("Arial", 16, "bold"),
+                            width=200,
+                            height=30)
     entry_sender.pack(pady=5)
 
-    label_recipient = ctk.CTkLabel(settings_window, text="Номер отримувача:", font=("Arial", 14, "bold"),
+    label_recipient = ctk.CTkLabel(settings_window, text="Номер отримувача-Чату:", font=("Arial", 14, "bold"),
                                    text_color="grey")
     label_recipient.pack(pady=10)
-    entry_recipient = ttk.Entry(settings_window, textvariable=recipient_number_var, font=("Arial", 12, "bold"))
+    entry_recipient = CTkEntry(settings_window, textvariable=recipient_number_var,
+                               font=("Arial", 16, "bold"),
+                               width=200,
+                               height=30)
     entry_recipient.pack(pady=5)
 
-    label_report_recipient = ctk.CTkLabel(settings_window, text="Номер для звіту:", font=("Arial", 14, "bold"),
+    label_report_recipient = ctk.CTkLabel(settings_window, text="Номер отримувача-Зіту:", font=("Arial", 14, "bold"),
                                           text_color="grey")
     label_report_recipient.pack(pady=10)
 
-    entry_report_recipient = ttk.Entry(settings_window, textvariable=report_recipient_number_var,
-                                       font=("Arial", 12, "bold"))
+    entry_report_recipient = CTkEntry(settings_window, textvariable=report_recipient_number_var,
+                                      font=("Arial", 16, "bold"),
+                                      width=200,
+                                      height=30)
     entry_report_recipient.pack(pady=5)
 
-    save_button = ctk.CTkButton(settings_window, text="Зберегти", font=("Arial", 12), text_color="white",
+    save_button = ctk.CTkButton(settings_window, text="Зберегти", font=("Arial", 14), text_color="white",
+                                hover_color="green",
                                 command=save_settings)
     save_button.pack(pady=20)
 
@@ -319,7 +344,7 @@ def open_donate_link():
 root = ctk.CTk()
 root.title("Журнал стрільб")
 root.geometry('500x700')
-root.resizable(False, False)
+# root.resizable(False, False)
 
 sender_number_var = tk.StringVar(root)
 recipient_number_var = tk.StringVar(root)
@@ -352,7 +377,7 @@ btn2 = ctk.CTkButton(root, text="Архів Пострілів", command=show_in
 btn2.place(relx=0.7, rely=0.05, anchor="center")
 
 # Таймер
-timer_label = tk.Label(root, text="00:00", font=("Ubuntu", 24, "bold"), bg="#242424", fg="green")
+timer_label = CTkLabel(root, text="00:00", font=("Arial", 36, "bold"), fg_color="#242424", text_color="green")
 timer_label.place(relx=0.5, rely=0.13, anchor="center")
 
 # Поля для вводу
@@ -425,16 +450,18 @@ def combined_function():
 # Випадаюче меню
 charge_label = ctk.CTkLabel(root, text="Заряд:", font=("Arial", 14, "bold"), text_color="white")
 charge_label.place(relx=0.5, rely=0.2, anchor="center")
-charge_combobox = ttk.Combobox(root, values=load_items_from_file(charge_file_path), width=7, font=("Arial", 12))
+charge_combobox = ctk.CTkComboBox(root, values=load_items_from_file(charge_file_path))
+charge_combobox.configure(border_width=0, justify="center", width=100, state="readonly")
 charge_combobox.place(relx=0.7, rely=0.2, anchor="center")
 
 projectile_label = ctk.CTkLabel(root, text="Снаряд:", font=("Arial", 14, "bold"), text_color="white")
 projectile_label.place(relx=0.5, rely=0.25, anchor="center")
-projectile_combobox = ttk.Combobox(root, values=load_items_from_file(projectile_file_path), width=7, font=("Arial", 12))
+projectile_combobox = ctk.CTkComboBox(root, values=load_items_from_file(projectile_file_path))
+projectile_combobox.configure(border_width=0, justify="center", width=100, state="readonly")
 projectile_combobox.place(relx=0.7, rely=0.25, anchor="center")
 # Час для вибраних снарядів
 time_label = ctk.CTkLabel(root, text="Час:", font=("Arial", 14, "bold"), text_color="white")
-time_label.place(relx=0.9, rely=0.22, anchor="center")
+time_label.place(relx=0.9, rely=0.21, anchor="center")
 time_entry = ctk.CTkEntry(root, width=60)
 time_entry.place(relx=0.9, rely=0.25, anchor="center")
 
@@ -465,11 +492,11 @@ shoot_btn.place(relx=0.8, rely=0.35, anchor="center")
 root.bind("<Control_L>", lambda e: shoot())
 
 # Журнал стрільби
-journal_label = ctk.CTkLabel(root, text="Журнал стрільби:", font=("Arial", 14, "bold"), text_color="white")
+journal_label = ctk.CTkLabel(root, text="Журнал стрільби:", font=("Arial", 14, "bold"), text_color="grey")
 journal_label.place(relx=0.5, rely=0.4, anchor="n")
-journal_text = tk.Text(root, height=13, width=50, font=("Ubuntu", 12), fg="green", bg="black", highlightthickness=0)
-journal_text.configure(font=("Ubuntu", 12), fg="green")
-journal_text.place(relx=0.5, rely=0.6, anchor="center")
+journal_text = CTkTextbox(root, height=250, width=450, fg_color="black")
+journal_text.configure(font=("Ubuntu", 16), text_color="green")
+journal_text.place(relx=0.5, rely=0.62, anchor="center")
 
 # Кнопки внизу
 btn_sklad = ctk.CTkButton(root, text="Склад", command=show_storage_window,
@@ -498,20 +525,37 @@ def show_input_window():
     input_window.title("Ведіть дані")
     input_window.resizable(False, False)
 
-    tk.Label(input_window, text="Вогнева позиція:", background="#242424",
-             font=("Arial", 12, "bold",),
-             fg="grey").pack(pady=5)
-    firing_position_entry = tk.Entry(input_window, font=("Arial", 12))
+    CTkLabel(input_window, text="Вогнева позиція:",
+             fg_color="#242424",
+             font=("Arial", 16, "bold", "bold"),
+             text_color="grey").pack(pady=5)
+    firing_position_entry = CTkEntry(input_window, font=("Arial", 16, "bold"),
+                                     corner_radius=10,
+                                     text_color="white",
+                                     height=30,
+                                     justify="center",
+                                     width=200,
+                                     placeholder_text="Введіть назву")
     firing_position_entry.pack(pady=10)
 
-    tk.Label(input_window, text="Командир гармати:",
-             background="#242424",
-             font=("Arial", 12, "bold"),
-             fg="grey").pack(pady=5)
-    gun_commander_entry = tk.Entry(input_window, font=("Arial", 12))
+    CTkLabel(input_window, text="Командир гармати:",
+             fg_color="#242424",
+             font=("Arial", 16, "bold"),
+             text_color="grey").pack(pady=5)
+    gun_commander_entry = CTkEntry(input_window, font=("Arial", 16, "bold"),
+                                   corner_radius=10,
+                                   text_color="white",
+                                   height=30,
+                                   justify="center",
+                                   width=200,
+                                   placeholder_text="Введіть назву")
     gun_commander_entry.pack(pady=10)
 
-    ctk.CTkButton(input_window, text="Записати", command=save_and_close, font=("Arial", 14)).pack(pady=20)
+    ctk.CTkButton(input_window, text="Записати", command=save_and_close,
+                  font=("Arial", 16, "bold"),
+                  corner_radius=10,
+                  hover_color="green",
+                  width=150).pack(pady=20)
 
     input_window.grab_set()
     input_window.wait_window()
@@ -525,8 +569,3 @@ if is_shots_file_empty():
 load_settings()
 
 root.mainloop()
-
-# v.1.4 - При вході в програму якщо файл shots.csv не має даних - появляється вікно з полями вводу Вогнева позиція,
-#         Командир гармати і кнопка Записати
-#         дані запсуються в файл DB/shotsposition.csv
-#         Відобразив дані з файлу shotsposition.csv  як заголовок звіту

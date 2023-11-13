@@ -73,7 +73,7 @@ def load_items_from_file(file_path):
 def show_storage_window():
     root = ctk.CTk()
     root.title("Склад БК")
-    root.geometry('600x400')
+    root.geometry('600x500')
     root.resizable(False, False)
 
     def add_projectile():
@@ -190,23 +190,23 @@ def show_storage_window():
     add_charge_button = ctk.CTkButton(upper_frame, text="Додати Заряд", command=add_charge)
     add_charge_button.grid(row=2, column=2, padx=10, pady=10)
 
-    projectile_table = ttk.Treeview(root, columns=('Снаряд', 'Залишок'), show="headings")
+    projectile_table = ttk.Treeview(root, columns=('Снаряд', 'Залишок'), show="headings", height=100)
     projectile_table.heading('Снаряд', text='Снаряд')
     projectile_table.heading('Залишок', text='Залишок')
-    projectile_table.column('Снаряд', width=100, anchor='center')
-    projectile_table.column('Залишок', width=100, anchor='center')
-    projectile_table.pack(side='left', padx=20, pady=20)
+    projectile_table.column('Снаряд', width=110, anchor='center')
+    projectile_table.column('Залишок', width=110, anchor='center')
+    projectile_table.pack(side='left', padx=30, pady=10)
     projectile_label = ctk.CTkLabel(upper_frame, text="Снаряди:",
                                     font=("Arial", 14, "bold"),
                                     text_color="grey")
     projectile_label.grid(row=5, column=0, padx=10)
 
-    charge_table = ttk.Treeview(root, columns=('Заряд', 'Залишок'), show="headings")
+    charge_table = ttk.Treeview(root, columns=('Заряд', 'Залишок'), show="headings", height=100)
     charge_table.heading('Заряд', text='Заряд')
     charge_table.heading('Залишок', text='Залишок')
-    charge_table.column('Заряд', width=100, anchor='center')
-    charge_table.column('Залишок', width=100, anchor='center')
-    charge_table.pack(side='right', padx=20, pady=20)
+    charge_table.column('Заряд', width=110, anchor='center')
+    charge_table.column('Залишок', width=110, anchor='center')
+    charge_table.pack(side='right', padx=30, pady=10)
     charge_label = ctk.CTkLabel(upper_frame, text="Заряди:",
                                 font=("Arial", 14, "bold"),
                                 text_color="grey")

@@ -3,15 +3,12 @@ import shutil
 from datetime import datetime
 import customtkinter as ctk
 import tkinter.messagebox as messagebox
-from tkinter import simpledialog
 
 
 def close_shift():
-    root = ctk.CTk()
-    root.withdraw()
-    shift_name = simpledialog.askstring("Закрити зміну", "Ком.Гармати:")
+    shift_name = ctk.CTkInputDialog(title="Закрити зміну", text="Ком.Гармати:").get_input()
 
-    # Помилка якщо рядок порожній
+    # Помилка, якщо рядок порожній
     if not shift_name:
         messagebox.showerror("Помилка", "Назва не може бути порожньою!")
         return
