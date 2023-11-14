@@ -1,7 +1,7 @@
 import sys
 import customtkinter as ctk
 import tkinter as tk
-from customtkinter import CTkTextbox, CTkLabel, CTkEntry, CTkToplevel
+from customtkinter import CTkTextbox, CTkLabel, CTkEntry
 from storage import show_storage_window
 import os
 import csv
