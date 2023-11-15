@@ -414,8 +414,8 @@ def restrict_kutomir_input(event):
 
     value = entry2.get()
 
-    # Дозволяє ввід лише цифри і один дефіс
-    if not all(char.isdigit() or char == '-' for char in value) or value.count("-") > 1:
+    # Дозволяє ввід лише цифри, одного дефісу і однієї крапки
+    if not all(char.isdigit() or char in ['-', '.'] for char in value) or value.count("-") > 1 or value.count(".") > 1:
         entry2.delete(0, tk.END)
         entry2.insert(0, value[:-1])
         return
@@ -433,7 +433,7 @@ def restrict_kutomir_input(event):
 
     # Дозволяє лише дві цифри перед і після дефісу
     parts = value.split("-")
-    if any(len(part) > 2 for part in parts):
+    if any(len(part) > 5 for part in parts):
         entry2.delete(0, tk.END)
         entry2.insert(0, value[:-1])
 
