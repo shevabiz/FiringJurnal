@@ -41,8 +41,19 @@ def receive_signal_messages_sync(sender_number):
         command = f'signal-cli -u {sender_number} receive'
         try:
             result = subprocess.run(command, shell=True, capture_output=True, text=True)
-            received_messages = [line.split("Body:", 1)[1].strip() for line in result.stdout.splitlines()
-                                 if "Body:" in line and line.split("Body:", 1)[1].strip()]
+            received_messages = []
+            current_message = None
+            for line in result.stdout.splitlines():
+                if "With profile key" in line:
+                    continue
+                if line.startswith("Body:"):
+                    if current_message is not None:
+                        received_messages.append(current_message)
+                    current_message = line.split("Body:", 1)[1].strip()
+                elif current_message is not None:
+                    current_message += "\n" + line.strip()
+            if current_message is not None:
+                received_messages.append(current_message)
             return received_messages
         except Exception as e:
             print(f"Error executing receive command: {e}")

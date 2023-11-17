@@ -11,7 +11,7 @@ shots_file_path = "DB/shots.csv"
 def show_individual_shots_archive():
     archive_window = CTkToplevel()
     archive_window.title("Архів Пострілів")
-    archive_window.geometry('500x750')
+    archive_window.geometry('520x750')
     archive_window.attributes('-topmost', True)
     archive_window.resizable(False, False)
 
