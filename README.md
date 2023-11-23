@@ -17,10 +17,11 @@ by shevabiz@gmail.com
 Додайте номер абонента, від якого буде відправлятися повідомлення в "Чат стрільби".
 Інструкція додавання номера через Signal-Cli:
 
-Реєстрація номера: signal-cli -u +ACCOUNT register
-Підтвердження номера: signal-cli -u +ACCOUNT register --captcha
-Підтвердження через SMS: signal-cli -a ACCOUNT verify CODE
+Реєстрація номера: signal-cli -u +ACCOUNT register,
+Підтвердження номера: signal-cli -u +ACCOUNT register --captcha,
+Підтвердження через SMS: signal-cli -a ACCOUNT verify CODE,
 signal-cli -u ВашНомерТелефону setProfile --name "ВашеІм'я"
+
 Після цього:
 
 Запустіть програму.
