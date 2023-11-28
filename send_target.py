@@ -24,7 +24,7 @@ def send_target_windows():
             "commander": []
         }
         if os.path.exists(MENU_DATA_PATH):
-            with open(MENU_DATA_PATH, mode='r', encoding='utf-8') as csv_file:
+            with open(MENU_DATA_PATH, mode='r', encoding='ISO 8859-5') as csv_file:
                 reader = csv.reader(csv_file)
                 for key, *values in reader:
                     sub_menu[key] = values
@@ -32,7 +32,7 @@ def send_target_windows():
 
     # Функція для збереження даних випадаючих меню
     def save_menu_data(menu_save):
-        with open(MENU_DATA_PATH, mode='w', newline='', encoding='utf-8') as csv_file:
+        with open(MENU_DATA_PATH, mode='w', newline='', encoding='ISO 8859-5') as csv_file:
             writer = csv.writer(csv_file)
             for key, values in menu_save.items():
                 writer.writerow([key] + values)
@@ -56,7 +56,7 @@ def send_target_windows():
     def save_data_to_csv(data, file_path):
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         file_exists = os.path.isfile(file_path)
-        with open(file_path, 'a', newline='', encoding='utf-8') as csvfile:
+        with open(file_path, 'a', newline='', encoding='ISO 8859-5') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=data.keys())
             if not file_exists:
                 writer.writeheader()
@@ -64,16 +64,20 @@ def send_target_windows():
 
     # Функція для читання налаштувань Signal
     def read_signal_settings():
-        with open('DB/signal_settings.csv', mode='r', encoding='utf-8') as csv_file:
+        with open('DB/signal_settings.csv', mode='r', encoding='ISO 8859-5') as csv_file:
             reader = csv.DictReader(csv_file)
             settings = next(reader)
-        return settings['Sender'], settings['ReportRecipient']
+            # Переконайтеся, що у вашому CSV є колонка GroupID
+            return settings['Sender'], settings['ReportRecipient'], settings.get('GroupID', None)
 
     # Функція для відправлення повідомлень через Signal
-    def send_signal_message(sender, recipient, message):
-        command = f"signal-cli -u {sender} send -m \"{message}\" {recipient}"
-        print("Виконувана команда:", command)
+    def send_signal_message(sender, recipient, message, recipient_type):
+        if recipient_type == "group":
+            command = f"signal-cli -u {sender} send -g {recipient} -m \"{message}\""
+        else:  # recipient_type == "phone"
+            command = f"signal-cli -u {sender} send -m \"{message}\" {recipient}"
 
+        print("Виконувана команда:", command)
         subprocess.run(command, shell=True)
 
     def read_shots_data(file_path):
@@ -116,13 +120,18 @@ def send_target_windows():
         save_data_to_csv(data, DATA_CSV_PATH)
 
         # Читання налаштувань Signal
-        sender, recipient = read_signal_settings()
+        sender, report_recipient, group_id = read_signal_settings()
 
+        # Визначення, куди відправляти повідомлення
+        recipient_type = recipient_type_var.get()
+        recipient = group_id if recipient_type == "group" else report_recipient
+
+        # Формування повідомлення
         message_lines = [f"{key}: {value}" for key, value in data.items()]
         message = " ".join(message_lines)
 
         # Відправлення повідомлення
-        send_signal_message(sender, recipient, message)
+        send_signal_message(sender, recipient, message, recipient_type)
 
         # Закриття вікна після відправки
         app.after(50, app.destroy)
@@ -143,7 +152,7 @@ def send_target_windows():
 
     app = ctk.CTk()
     app.title("Форма відправки даних")
-    app.geometry("500x400")
+    app.geometry("500x500")
 
     # Змінні для випадаючих меню
     subdivision_var = ctk.StringVar()
@@ -251,6 +260,16 @@ def send_target_windows():
     expenditure_entry = ctk.CTkEntry(app)
     expenditure_entry.grid(row=7, column=1, pady=vertical_padding, padx=horizont_padding)
     update_expenditure()
+
+    recipient_type_var = ctk.StringVar(value="phone")
+
+    ctk.CTkRadioButton(app, text="Відправити в групу", variable=recipient_type_var, value="group").grid(row=8,
+                                                                                                        column=0,
+                                                                                                        pady=20)
+    ctk.CTkRadioButton(app, text="Відправити на номер", variable=recipient_type_var, value="phone").grid(row=8,
+                                                                                                         column=1,
+                                                                                                         pady=20)
+
     submit_button = ctk.CTkButton(app, text="Відправити", fg_color="green", hover_color="red", command=submit_data)
-    submit_button.grid(row=8, column=1, pady=30)
+    submit_button.grid(row=9, column=1, pady=30)
     app.mainloop()

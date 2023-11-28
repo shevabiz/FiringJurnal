@@ -43,17 +43,24 @@ def receive_signal_messages_sync(sender_number):
             result = subprocess.run(command, shell=True, capture_output=True, text=True)
             received_messages = []
             current_message = None
+            is_group_message = False
+
             for line in result.stdout.splitlines():
-                if "With profile key" in line:
-                    continue
-                if line.startswith("Body:"):
-                    if current_message is not None:
-                        received_messages.append(current_message)
+                if "Group" in line:
+                    is_group_message = True
+                    break
+
+                if line.startswith("Body:") and not is_group_message:
                     current_message = line.split("Body:", 1)[1].strip()
-                elif current_message is not None:
+
+                elif "With profile key" in line and current_message is not None and not is_group_message:
+                    received_messages.append(current_message)
+                    current_message = None
+                    is_group_message = False
+
+                elif current_message is not None and not is_group_message:
                     current_message += "\n" + line.strip()
-            if current_message is not None:
-                received_messages.append(current_message)
+
             return received_messages
         except Exception as e:
             print(f"Error executing receive command: {e}")
@@ -79,7 +86,7 @@ class ChatShotsWindow:
             open(self.history_file_path, 'w').close()
 
     def append_message_to_history(self, sender, message):
-        with open(self.history_file_path, 'a', encoding="utf-8") as f:
+        with open(self.history_file_path, 'a', encoding="ISO 8859-5") as f:
             f.write(f"{sender}: {message}\n")
 
     @staticmethod
@@ -176,7 +183,7 @@ class ChatShotsWindow:
         self.is_chat_window_open = False
         if self.after_id:
             self.chat_window.after_cancel(self.after_id)
-        with open(self.history_file_path, 'a', encoding="utf-8") as f:
+        with open(self.history_file_path, 'a', encoding="ISO 8859-5") as f:
             f.write("-------------------------------\n")
         self.chat_window.destroy()
         self.chat_window = None

@@ -265,7 +265,7 @@ def show_settings_window():
     if settings_window:
         settings_window.destroy()
 
-    settings_window = child_windows_position(root, 250, 350)
+    settings_window = child_windows_position(root, 250, 450)
     settings_window.title("Налаштування Signal-CLI")
     settings_window.attributes('-topmost', True)
 
@@ -298,7 +298,15 @@ def show_settings_window():
                                       width=200,
                                       height=30)
     entry_report_recipient.pack(pady=5)
-
+    label_group_recipient = ctk.CTkLabel(settings_window, text="ID групи-Відправки цілі:",
+                                         font=("Arial", 14, "bold"),
+                                         text_color="grey")
+    label_group_recipient.pack(pady=10)
+    entry_group_recipient = CTkEntry(settings_window, textvariable=group_id_var,
+                                     font=("Arial", 16, "bold"),
+                                     width=200,
+                                     height=30)
+    entry_group_recipient.pack(pady=5)
     save_button = ctk.CTkButton(settings_window, text="Зберегти", font=("Arial", 14), text_color="white",
                                 hover_color="green",
                                 command=save_settings)
@@ -306,23 +314,23 @@ def show_settings_window():
 
 
 def save_settings():
-    global sender_number_var, recipient_number_var, report_recipient_number_var
+    global sender_number_var, recipient_number_var, report_recipient_number_var, group_id_var
     sender_number = sender_number_var.get()
     recipient_number = recipient_number_var.get()
     report_recipient_number = report_recipient_number_var.get()
+    group_id = group_id_var.get()
 
-    # Зберігає дані про отримувача і відправника введених в Налаштуваннях
     with open(settings_file_path, "w", newline='') as csv_file:
         writer_setting = csv.writer(csv_file)
-        writer_setting.writerow(["Sender", "Recipient", "ReportRecipient"])
-        writer_setting.writerow([sender_number, recipient_number, report_recipient_number])
+        writer_setting.writerow(["Sender", "Recipient", "ReportRecipient", "GroupID"])
+        writer_setting.writerow([sender_number, recipient_number, report_recipient_number, group_id])
 
     if settings_window:
         settings_window.destroy()
 
 
 def load_settings():
-    global sender_number_var, recipient_number_var, report_recipient_number_var
+    global sender_number_var, recipient_number_var, report_recipient_number_var, group_id_var
     if os.path.exists(settings_file_path):
         with open(settings_file_path, "r") as csv_file:
             reader = csv.reader(csv_file)
@@ -330,10 +338,8 @@ def load_settings():
             for row in reader:
                 sender_number_var.set(row[0])
                 recipient_number_var.set(row[1])
-                if len(row) > 2:
-                    report_recipient_number_var.set(row[2])
-                else:
-                    report_recipient_number_var.set("")
+                report_recipient_number_var.set(row[2] if len(row) > 2 else "")
+                group_id_var.set(row[3] if len(row) > 3 else "")
 
 
 # Посилання на Донат
@@ -343,12 +349,14 @@ def open_donate_link():
 
 root = ctk.CTk()
 root.title("Журнал стрільб")
+# root.iconbitmap('iconka.ico')
 root.geometry('500x700')
 # root.resizable(False, False)
 
 sender_number_var = tk.StringVar(root)
 recipient_number_var = tk.StringVar(root)
 report_recipient_number_var = tk.StringVar(root)
+group_id_var = tk.StringVar(root)
 
 # Створення верхнього меню
 menu = tk.Menu(root)
