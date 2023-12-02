@@ -65,6 +65,10 @@ def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles
     # Груаує за датою та пострілами finis_shots
     finish_shots_grouped = data.groupby('Дата')['Витрата'].sum().reset_index()
 
+    # Сортування за датою
+    finish_shots_grouped_sorted = sorted(finish_shots_grouped.to_dict('records'),
+                                         key=lambda x: datetime.strptime(x['Дата'], '%d.%m.%y'))
+
     start_date = min(dates)
     end_date = max(dates)
     total_shots = data["Витрата"].sum()
@@ -93,7 +97,7 @@ def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles
     c.drawString(2 * inch, 7.5 * inch, "Пострілів")
     c.drawString(6 * inch, 7.5 * inch, "Залишок БК")
     c.drawString(2 * inch, 5.7 * inch, "Настріл")
-    c.drawString(6 * inch, 4.5 * inch, "Витрата по дням")
+    c.drawString(6 * inch, 4.1 * inch, "Витрата по дням")
     c.setFont("FreeSans", 14)
 
     # Блок Пострілів
@@ -110,8 +114,8 @@ def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles
         c.drawString(8 * inch, (6.8 - 0.3 * index) * inch, f"{row['Name']} - {row['Quantity']}шт.")
 
     # Блок Витрата по дням
-    y_position = 4.1
-    for index, row in finish_shots_grouped.iterrows():
+    y_position = 3.8
+    for row in finish_shots_grouped_sorted:
         c.drawString(6 * inch, y_position * inch, f"{row['Дата']} - {row['Витрата']} шт")
         y_position -= 0.3
 
