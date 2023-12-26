@@ -18,6 +18,7 @@ from shift import close_shift
 from chat_shots import chat_window_instance
 from tkinter import messagebox
 from send_target import send_target_windows
+from position_window import show_position_window
 
 # Перевірка і створення папки
 if not os.path.exists("DB"):
@@ -365,6 +366,8 @@ help_menu = tk.Menu(menu)
 menu.add_cascade(label="Допомога", menu=help_menu, font=("Arial", 10))
 menu.add_command(label="Звіт", font=("Arial", 10), command=generate_and_open_report)
 help_menu.add_command(label="Налаштування", command=show_settings_window, font=("Arial", 10))
+help_menu.add_command(label="Позиція", command=lambda: show_position_window(root, update_position_data),
+                      font=("Arial", 10))
 help_menu.add_command(label="Закрити зміну", command=close_shift, font=("Arial", 10))
 help_menu.add_command(label="Перезавнтажити", command=restart_program)
 help_menu.add_command(label="Про автора", command=about_author, font=("Arial", 10))
@@ -379,14 +382,14 @@ donat_btn = ctk.CTkButton(root, text="Підтримати проєкт",
 donat_btn.place(relx=0.35, rely=0.95)
 # Кнопки в центрі
 btn1 = ctk.CTkButton(root, text="Архів стрільби", command=show_archive_shots)
-btn1.place(relx=0.3, rely=0.05, anchor="center")
+btn1.place(relx=0.3, rely=0.07, anchor="center")
 
 btn2 = ctk.CTkButton(root, text="Архів Пострілів", command=show_individual_shots_archive)
-btn2.place(relx=0.7, rely=0.05, anchor="center")
+btn2.place(relx=0.7, rely=0.07, anchor="center")
 
 # Таймер
 timer_label = CTkLabel(root, text="00:00", font=("Arial", 36, "bold"), fg_color="#242424", text_color="green")
-timer_label.place(relx=0.5, rely=0.13, anchor="center")
+timer_label.place(relx=0.5, rely=0.14, anchor="center")
 
 # Поля для вводу
 lbl1 = ctk.CTkLabel(root, text="Приціл:", font=("Arial", 14, "bold"), text_color="white")
@@ -398,6 +401,40 @@ lbl2 = ctk.CTkLabel(root, text="Кутомір:", font=("Arial", 14, "bold"), te
 lbl2.place(relx=0.1, rely=0.25, anchor="center")
 entry2 = ctk.CTkEntry(root, width=70)
 entry2.place(relx=0.3, rely=0.25, anchor="center")
+
+
+# Функція читання даних
+def read_last_position_data():
+    try:
+        with open('DB/shotsposition.csv', 'r', newline='', encoding='latin-1') as file_shotsposition:
+            last_line = file_shotsposition.readlines()[-1]
+            gun_position_number, direction_position = last_line.strip().split(',')
+            return gun_position_number, direction_position
+    except FileNotFoundError:
+        return "Невідомо", "Невідомо"
+    except IndexError:
+        return "Невідомо", "Невідомо"
+
+
+def update_position_data():
+    gun_position_number, direction_position = read_last_position_data()
+    gun_number_label.configure(text=f"Номер гармати: {gun_position_number}")
+    direction_label.configure(text=f"Дирекційний кут: {direction_position}")
+
+
+# Читаємо дані про позицію
+gun_number, direction = read_last_position_data()
+
+# Додаємо місце для відображення даних
+gun_number_label = ctk.CTkLabel(root, text=f"Номер гармати: {gun_number}",
+                                text_color="grey",
+                                font=("Arial", 14, "bold"))
+gun_number_label.place(relx=0.2, rely=0.02, anchor="center")
+
+direction_label = ctk.CTkLabel(root, text=f"Дирекційний кут: {direction}",
+                               text_color="grey",
+                               font=("Arial", 14, "bold"))
+direction_label.place(relx=0.8, rely=0.02, anchor="center")
 
 
 # Обмеження для поля Приціл

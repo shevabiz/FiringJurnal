@@ -9,6 +9,7 @@ from collections import defaultdict
 from datetime import datetime
 import os
 import chardet
+from reportlab.lib import colors
 
 pdfmetrics.registerFont(TTFont('FreeSans', 'DB/Font/FreeSans/FreeSans.ttf'))
 pdfmetrics.registerFont(TTFont('FreeSans-Bold', 'DB/Font/FreeSans/FreeSansBold.ttf'))
@@ -35,6 +36,16 @@ def read_csv_with_detected_encoding(file_path):
     return pd.read_csv(file_path, encoding=encoding)
 
 
+def read_last_position_data(file_path):
+    try:
+        with open(file_path, "r", encoding='latin-1') as sp_file:
+            last_line = sp_file.readlines()[-1]
+            gun_number, direction = last_line.strip().split(',')
+            return gun_number, direction
+    except (FileNotFoundError, IndexError):
+        return "Невідомо", "Невідомо"
+
+
 def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles_csv_path, shots_csv_path,
                                    output_pdf_path):
     # Зчитує дані з файлів з визначенням кодування
@@ -42,6 +53,8 @@ def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles
     projectiles_data = read_csv_with_detected_encoding(projectiles_csv_path)
     data = read_csv_with_detected_encoding(input_csv_path)
     shots_data = read_csv_with_detected_encoding(shots_csv_path)
+    shots_position_file_path = "DB/shotsposition.csv"
+    gun_number, direction = read_last_position_data(shots_position_file_path)
 
     y_position = 8 * inch
 
@@ -91,9 +104,13 @@ def integrated_generate_pdf_report(input_csv_path, charges_csv_path, projectiles
         c.setFont("FreeSans-Bold", 20)
         c.drawString(1 * inch, 8 * inch, shots_position_data)
         c.setFont("FreeSans", 14)
+        c.setFillColor(colors.darkgrey)
+        c.drawString(5 * inch, 8 * inch, f"Номер гармати: {gun_number}")
+        c.drawString(7 * inch, 8 * inch, f"Дирекційний кут: {direction}")
 
     # Створює Label для заголовків блоків в документі
     c.setFont("FreeSans-Bold", 16)
+    c.setFillColor(colors.black)
     c.drawString(2 * inch, 7.5 * inch, "Пострілів")
     c.drawString(6 * inch, 7.5 * inch, "Залишок БК")
     c.drawString(2 * inch, 5.7 * inch, "Настріл")
